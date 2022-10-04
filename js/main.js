@@ -58,10 +58,10 @@ addForm.addEventListener("submit", (evt)=>{
     const heightAdd = +elements.height.value;
     const featuresAdd = elements.features.value;
 
-    if (titleAdd.trim()) {
+    if (titleAdd.trim() && imgAdd && priceAdd && dateAdd && widthAdd && heightAdd && featuresAdd) {
         const newParrot ={
             id: Math.floor(Math.random() * 1000),
-            title: titleAdd,
+            title:  titleAdd,
             img: String(imgAdd),
             price:priceAdd,
             birthDate: dateAdd,
@@ -74,8 +74,9 @@ addForm.addEventListener("submit", (evt)=>{
         Parrots.push(newParrot)
         showingParrots.push(newParrot)
         localStorage.setItem("parrot", JSON.stringify(Parrots))
-    }
     renderParrots();
+
+    }
     addForm.reset();
     Modal.hide();
 })
@@ -101,31 +102,31 @@ wrapList.addEventListener("click", (e)=>{
         showingParrots.splice(ClickParrot, 1)         
         localStorage.setItem("parrot", JSON.stringify(Parrots))
         renderParrots()  
-    }
-    else if (e.target.matches(".parrots__edit-btn")){
+    }else if (e.target.matches(".parrots__edit-btn")){
         const clickedEdit = +e.target.dataset.id
         const ClickParrot = Parrots.find((parrot)=>{
            return parrot.id === clickedEdit;
-        })
-        titleEdit.value = ClickParrot.title
-        imgEdit.value = ClickParrot.img
+        });
+        titleEdit.value = ClickParrot.title;
+        imgEdit.value = ClickParrot.img;
         priceEdit.value = ClickParrot.price
         dateEdit.value = ClickParrot.birthDate
         widthEdit.value = ClickParrot.sizes.width
         heightEdit.value = ClickParrot.sizes.height
         featuresEdit.value = ClickParrot.features
-        editForm.setAttribute("data-editing-id", ClickParrot.id)
+        editForm.setAttribute("data-editing-id", clickedEdit)
 
         
     }
-})
 renderParrots();
+
+})
+
 
     editForm.addEventListener("submit", (e)=>{
         e.preventDefault();
         const editClicked = +e.target.dataset.editingId; 
 
-        if(titleEdit.value.trim()){
             let parrot ={
                 id: editClicked,
                 title: titleEdit.value,
@@ -145,15 +146,16 @@ renderParrots();
                 return parrot.id === editClicked
             }) 
             Parrots.splice(editedParrot,1,parrot)
-            Parrots.splice(editParrot,1,parrot)
+            showingParrots.splice(editParrot,1,parrot)
             JSON.parse(localStorage.getItem("parrot")).find((editedParrot) => {
                 return parrot = editedParrot
             })
             localStorage.setItem("parrot" , JSON.stringify(Parrots))
             editFormModul.hide()
-        }   
-renderParrots()
+            renderParrots()
 })
+renderParrots()
+
 
 const filterForm = document.querySelector(".filter")
 filterForm.addEventListener("submit", (e)=>{
